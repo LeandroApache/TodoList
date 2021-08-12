@@ -1,8 +1,17 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {useState} from 'react';
 import './App.css';
 import {v1} from "uuid";
 import {TodoList} from "./Components/TodoList/TodoList";
 import {AddItemForm} from "./Components/UI/AddItemForm";
+import Grid, {GridSpacing} from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import {makeStyles} from "@material-ui/core/styles";
+
+const useStyles = makeStyles({
+  paper: {
+    padding: 10,
+  },
+});
 
 export type tasksType = {
   [a: string]: Array<tasksItemType>
@@ -22,6 +31,7 @@ const todoListId1 = v1();
 const todoListId2 = v1();
 
 function App() {
+  const classes = useStyles();
   const [tasks, setTasks] = useState<tasksType>({
     [todoListId1]: [
       {id: v1(), title: "HTML", isDone: true},
@@ -90,38 +100,39 @@ function App() {
 
   return (
     <div className="App">
-      <div className={"app_row"}>
-        <div className={'app_column'}>
-          <div className={'app_header'}>
+      <Grid container spacing={5}>
+        <Grid container justifyContent="center"
+              alignItems="center" item xs={12}>
+          <Paper className={classes.paper}>
             <AddItemForm onAddItem={addNewTodoListHandler}/>
-          </div>
-        </div>
-        <div className={'app_column'}>
-          <div className={'app_body'}>
-            {todoLists.map(tl => {
-              let filteredTasks = tasks[tl.id];
-              if (tl.filter === "ACTIVE") {
-                filteredTasks = tasks[tl.id].filter(t => !t.isDone)
-              }
-              if (tl.filter === "COMPLETED") {
-                filteredTasks = tasks[tl.id].filter(t => t.isDone)
-              }
-              return <TodoList key={tl.id}
-                               id={tl.id}
-                               title={tl.title}
-                               tasks={filteredTasks}
-                               filterValue={tl.filter}
-                               onAddTask={addNewTaskHandler}
-                               onChangeStatus={changeStatusHandler}
-                               onChangeFilter={changeFilterHandler}
-                               onDeleteTask={deleteTaskHandler}
-                               onDeleteTodoList={deleteTodoListHandler}
-                               onUpdateTaskTitle={updateTaskTitleHandler}
-                               onUpdateTodoListTitle={updateTodoListTitleHandler}/>
-            })}
-          </div>
-        </div>
-      </div>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} container justifyContent="space-around" alignItems="flex-start" spacing={2}>
+          {todoLists.map(tl => {
+            let filteredTasks = tasks[tl.id];
+            if (tl.filter === "ACTIVE") {
+              filteredTasks = tasks[tl.id].filter(t => !t.isDone)
+            }
+            if (tl.filter === "COMPLETED") {
+              filteredTasks = tasks[tl.id].filter(t => t.isDone)
+            }
+            return <Grid item>
+              <TodoList key={tl.id}
+                        id={tl.id}
+                        title={tl.title}
+                        tasks={filteredTasks}
+                        filterValue={tl.filter}
+                        onAddTask={addNewTaskHandler}
+                        onChangeStatus={changeStatusHandler}
+                        onChangeFilter={changeFilterHandler}
+                        onDeleteTask={deleteTaskHandler}
+                        onDeleteTodoList={deleteTodoListHandler}
+                        onUpdateTaskTitle={updateTaskTitleHandler}
+                        onUpdateTodoListTitle={updateTodoListTitleHandler}/>
+            </Grid>
+          })}
+        </Grid>
+      </Grid>
     </div>
   );
 }

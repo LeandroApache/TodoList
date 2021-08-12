@@ -1,11 +1,13 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
 import classes from "./AddItemForm.module.css";
+import Button from "@material-ui/core/Button";
+import TextField from '@material-ui/core/TextField';
 
 export type addItemFormProps = {
   onAddItem: (value: string) => void
 }
 
-export function AddItemForm(props: addItemFormProps){
+export function AddItemForm(props: addItemFormProps) {
   const [inputValue, setInputValue] = useState<string>("");
   const [error, setError] = useState<boolean>(false);
 
@@ -22,7 +24,7 @@ export function AddItemForm(props: addItemFormProps){
     }
   }
 
-  const keyPressHandler = (e: KeyboardEvent<HTMLInputElement>)=>{
+  const keyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.code === "Enter") {
       if (!inputValue.trim()) {
         setError(true);
@@ -35,13 +37,18 @@ export function AddItemForm(props: addItemFormProps){
 
   return (
     <div>
-      <input type="text"
-             value={inputValue}
-             className={error ? classes.error : ""}
-             onChange={updateInputValueHandler}
-             onKeyPress={keyPressHandler}/>
-      <button onClick={addNewTasksHandler}>Add new task</button>
-      {error && <div className={classes.dropdown}>Invalid input!!!</div>}
+      <TextField type="text"
+                 value={inputValue}
+                 color='primary'
+                 variant="outlined"
+                 label="Enter value"
+                 size='small'
+                 required
+                 error={error}
+                 helperText={error ? "Incorrect entry." : ""}
+                 onChange={updateInputValueHandler}
+                 onKeyPress={keyPressHandler}/>
+      <Button onClick={addNewTasksHandler} color="primary" variant="contained" size="large">+</Button>
     </div>
   )
 }
